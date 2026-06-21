@@ -4,12 +4,20 @@ from knowledge.quantastrike_kb import SYSTEM_PROMPT, QUANTASTRIKE_KNOWLEDGE
 
 class ClaudeAI:
     def __init__(self):
-        self.client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+        self.client = None
         self.model = settings.CLAUDE_MODEL
+
+    def _init_client(self):
+        """Инициализировать клиент при первом использовании"""
+        if self.client is None:
+            if not settings.ANTHROPIC_API_KEY:
+                raise ValueError("ANTHROPIC_API_KEY не установлен!")
+            self.client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
 
     async def get_response(self, user_message: str) -> str:
         """Получить ответ от Claude с контекстом QuantaStrike"""
         try:
+            self._init_client()
             system_prompt = SYSTEM_PROMPT.format(knowledge=QUANTASTRIKE_KNOWLEDGE)
 
             message = self.client.messages.create(
@@ -28,6 +36,7 @@ class ClaudeAI:
     async def check_relevance(self, question: str) -> bool:
         """Проверить релевантность вопроса к QuantaStrike"""
         try:
+            self._init_client()
             from knowledge.quantastrike_kb import RELEVANCE_CHECK_PROMPT
 
             message = self.client.messages.create(
