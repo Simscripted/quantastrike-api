@@ -1,4 +1,5 @@
 import uvicorn
+from typing import Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -40,7 +41,7 @@ class ChatResponse(BaseModel):
     success: bool
     response: str
     remaining_questions: int
-    message_id: str = None
+    message_id: Optional[str] = None
 
 class HealthResponse(BaseModel):
     status: str
