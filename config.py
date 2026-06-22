@@ -28,6 +28,9 @@ class Settings:
     CHAT_HISTORY_FILE = os.path.join(DATA_DIR, "chat_history.json")
 
     def __init__(self):
-        os.makedirs(self.DATA_DIR, exist_ok=True)
+        try:
+            os.makedirs(self.DATA_DIR, exist_ok=True)
+        except Exception as e:
+            print(f"Warning: Could not create data directory: {e}")
 
 settings = Settings()

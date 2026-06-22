@@ -1,5 +1,4 @@
 import os
-import json
 import httpx
 from knowledge.quantastrike_kb import SYSTEM_PROMPT, QUANTASTRIKE_KNOWLEDGE
 
@@ -27,7 +26,11 @@ class ClaudeAI:
             }
             async with httpx.AsyncClient() as client:
                 response = await client.post(self.api_url, json=payload, headers=headers, timeout=30)
+                if response.status_code != 200:
+                    return f"❌ API error {response.status_code}: {response.text}"
                 result = response.json()
+                if "content" not in result or not result["content"]:
+                    return "❌ Invalid API response"
                 return result["content"][0]["text"]
         except Exception as e:
             return f"❌ Error: {str(e)}"
@@ -47,7 +50,11 @@ class ClaudeAI:
             }
             async with httpx.AsyncClient() as client:
                 response = await client.post(self.api_url, json=payload, headers=headers, timeout=30)
+                if response.status_code != 200:
+                    return True
                 result = response.json()
+                if "content" not in result or not result["content"]:
+                    return True
                 text = result["content"][0]["text"].strip().upper()
                 return "ДА" in text
         except:
