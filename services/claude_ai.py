@@ -1,5 +1,5 @@
 import os
-from openai import AsyncOpenAI
+from openai import OpenAI
 from knowledge.quantastrike_kb import SYSTEM_PROMPT, QUANTASTRIKE_KNOWLEDGE
 
 class ClaudeAI:
@@ -7,13 +7,13 @@ class ClaudeAI:
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("OPENAI_API_KEY not set")
-        self.client = AsyncOpenAI(api_key=api_key)
+        self.client = OpenAI(api_key=api_key)
         self.model = "gpt-4-turbo"
 
     async def get_response(self, user_message: str) -> str:
         try:
             system_prompt = SYSTEM_PROMPT.format(knowledge=QUANTASTRIKE_KNOWLEDGE)
-            response = await self.client.chat.completions.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
                 max_tokens=512,
                 messages=[
@@ -28,7 +28,7 @@ class ClaudeAI:
     async def check_relevance(self, question: str) -> bool:
         try:
             from knowledge.quantastrike_kb import RELEVANCE_CHECK_PROMPT
-            response = await self.client.chat.completions.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
                 max_tokens=10,
                 messages=[
