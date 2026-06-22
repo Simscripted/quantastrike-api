@@ -7,7 +7,7 @@ class ClaudeAI:
         self.api_key = os.getenv("ANTHROPIC_API_KEY")
         if not self.api_key:
             raise ValueError("ANTHROPIC_API_KEY not set")
-        self.model = "claude-opus"
+        self.model = "claude-3-sonnet"
         self.api_url = "https://api.anthropic.com/v1/messages"
 
     async def get_response(self, user_message: str) -> str:
