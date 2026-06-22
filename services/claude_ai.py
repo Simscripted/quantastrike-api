@@ -7,7 +7,7 @@ class ClaudeAI:
         self.api_key = os.getenv("ANTHROPIC_API_KEY")
         if not self.api_key:
             raise ValueError("ANTHROPIC_API_KEY not set")
-        self.model = "claude-opus-4-1"
+        self.model = "claude-3-5-haiku-20241022"
         self.api_url = "https://api.anthropic.com/v1/messages"
 
     async def get_response(self, user_message: str) -> str:
@@ -20,7 +20,7 @@ class ClaudeAI:
             }
             payload = {
                 "model": self.model,
-                "max_tokens": 1024,
+                "max_tokens": 512,
                 "system": system_prompt,
                 "messages": [{"role": "user", "content": user_message}]
             }
