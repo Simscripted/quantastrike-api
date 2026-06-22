@@ -10,7 +10,7 @@ class ClaudeAI:
         self.client = OpenAI(api_key=api_key)
         self.model = "gpt-4-turbo"
 
-    async def get_response(self, user_message: str) -> str:
+    def get_response(self, user_message: str) -> str:
         try:
             system_prompt = SYSTEM_PROMPT.format(knowledge=QUANTASTRIKE_KNOWLEDGE)
             response = self.client.chat.completions.create(
@@ -25,7 +25,7 @@ class ClaudeAI:
         except Exception as e:
             return f"❌ Error: {str(e)}"
 
-    async def check_relevance(self, question: str) -> bool:
+    def check_relevance(self, question: str) -> bool:
         try:
             from knowledge.quantastrike_kb import RELEVANCE_CHECK_PROMPT
             response = self.client.chat.completions.create(

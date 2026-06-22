@@ -61,7 +61,7 @@ async def health_check() -> HealthResponse:
     )
 
 @app.post("/api/chat", tags=["Chat"])
-async def chat(message: ChatMessage) -> ChatResponse:
+def chat(message: ChatMessage) -> ChatResponse:
     """
     Получить ответ от QuantaStrike Chat Assistant
 
@@ -88,7 +88,7 @@ async def chat(message: ChatMessage) -> ChatResponse:
         )
 
     # Проверить релевантность вопроса
-    is_relevant = await claude_ai.check_relevance(message.message)
+    is_relevant = claude_ai.check_relevance(message.message)
 
     if not is_relevant:
         # Увеличить счётчик даже для нерелевантного вопроса
@@ -102,7 +102,7 @@ async def chat(message: ChatMessage) -> ChatResponse:
         )
 
     # Получить ответ от Claude
-    response_text = await claude_ai.get_response(message.message)
+    response_text = claude_ai.get_response(message.message)
 
     # Увеличить счётчик вопросов
     question_count = user_limits_manager.increment_question_count(message.user_id)
